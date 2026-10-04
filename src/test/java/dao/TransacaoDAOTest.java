@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -18,27 +19,27 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayName("Testes de Integração do TransacaoDAO (SQLite em Memória)")
+@DisplayName("Testes de Integração do TransacaoDAO")
 public class TransacaoDAOTest {
 
     private TransacaoDAO dao;
 
     @BeforeAll
     public static void configurarAmbienteDeTeste() {
-        // Redireciona a conexão para o banco SQLite totalmente mantido em memória RAM
-        DatabaseConnection.setTestUrl("jdbc:sqlite::memory:");
+        // Aponta para um arquivo de banco exclusivo de testes
+        DatabaseConnection.setTestUrl("jdbc:sqlite:fintrack_test.db");
     }
 
     @BeforeEach
     public void setUp() throws SQLException {
-        // Recria a estrutura do banco antes de cada método de teste
+        // Garante a criação da tabela antes de cada método de teste
         DatabaseConnection.inicializarBanco();
         dao = new TransacaoDAO();
     }
 
     @AfterEach
     public void tearDown() throws SQLException {
-        // Destrói totalmente as tabelas e dados ao final de cada teste para zerar o estado
+        // Limpa a tabela e remove os registros após cada teste
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement()) {
             stmt.execute("DROP TABLE IF EXISTS transacoes");
@@ -48,7 +49,12 @@ public class TransacaoDAOTest {
 
     @AfterAll
     public static void restaurarAmbienteOriginal() {
+        // Restaura a URL original e remove o arquivo de teste temporário
         DatabaseConnection.setTestUrl("jdbc:sqlite:fintrack.db");
+        File testDb = new File("fintrack_test.db");
+        if (testDb.exists()) {
+            testDb.delete();
+        }
     }
 
     @Test
@@ -66,6 +72,7 @@ public class TransacaoDAOTest {
         dao.salvar(t);
 
         Transacao buscada = dao.buscarPorId(t.getId());
+        assertNotNull(buscada);
         assertEquals("Salário", buscada.getDescricao());
     }
 
