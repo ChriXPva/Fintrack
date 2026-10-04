@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.MainViewController" stylesheets="@../styles/style.css"
+            prefWidth="800" prefHeight="500">
+    <top>
+        <HBox styleClass="header-panel" alignment="CENTER_LEFT" spacing="20">
+            <Label text="FinTrack - Gestão Financeira" styleClass="header-title"/>
+        </HBox>
+    </top>
+    <center>
+        <VBox spacing="10">
+            <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+            <TableView fx:id="tabelaTransacoes" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="250"/>
+                    <TableColumn fx:id="colTipo" text="Tipo" prefWidth="120"/>
+                    <TableColumn fx:id="colValor" text="Valor" prefWidth="150"/>
+                    <TableColumn fx:id="colData" text="Data" prefWidth="150"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+    <bottom>
+        <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 15;">
+            <Button text="Nova Transação" styleClass="button-primary" onAction="#abrirNovaTransacaoView"/>
+            <Button text="Remover Selecionada" styleClass="button-danger" onAction="#removerTransacao"/>
+            <Button text="Ver Relatório" styleClass="button-secondary" onAction="#abrirRelatorioView"/>
+        </HBox>
+    </bottom>
+</BorderPane>

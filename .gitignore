@@ -1,0 +1,16 @@
+# Pastas de compilação e artefatos
+/target/
+/bin/
+
+# Arquivos de ambiente do Eclipse
+.classpath
+.project
+.settings/
+
+# Arquivo do Banco de Dados SQLite local
+*.db
+
+# Arquivos de IDEs e do sistema
+.DS_Store
+.idea/
+*.iml
