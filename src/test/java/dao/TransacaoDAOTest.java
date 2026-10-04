@@ -26,20 +26,17 @@ public class TransacaoDAOTest {
 
     @BeforeAll
     public static void configurarAmbienteDeTeste() {
-        // Aponta para um arquivo de banco exclusivo de testes
         DatabaseConnection.setTestUrl("jdbc:sqlite:fintrack_test.db");
     }
 
     @BeforeEach
     public void setUp() throws SQLException {
-        // Garante a criação da tabela antes de cada método de teste
         DatabaseConnection.inicializarBanco();
         dao = new TransacaoDAO();
     }
 
     @AfterEach
     public void tearDown() throws SQLException {
-        // Limpa a tabela e remove os registros após cada teste
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement()) {
             stmt.execute("DROP TABLE IF EXISTS transacoes");
@@ -49,7 +46,6 @@ public class TransacaoDAOTest {
 
     @AfterAll
     public static void restaurarAmbienteOriginal() {
-        // Restaura a URL original e remove o arquivo de teste temporário
         DatabaseConnection.setTestUrl("jdbc:sqlite:fintrack.db");
         File testDb = new File("fintrack_test.db");
         if (testDb.exists()) {
@@ -105,5 +101,27 @@ public class TransacaoDAOTest {
 
         double saldo = dao.calcularSaldoTotal();
         assertEquals(900.0, saldo, 0.001);
+    }
+
+    @Test
+    @DisplayName("Deve calcular saldo específico de um mês")
+    public void deveCalcularSaldoPorMes() throws SQLException, EntradaInvalidaException {
+        dao.salvar(new Transacao("Bônus Jan", 500.0, "RECEITA", LocalDate.of(2026, 1, 15)));
+        dao.salvar(new Transacao("Luz Jan", 100.0, "DESPESA", LocalDate.of(2026, 1, 20)));
+        dao.salvar(new Transacao("Salário Fev", 1000.0, "RECEITA", LocalDate.of(2026, 2, 10)));
+
+        double saldoJan = dao.calcularSaldoPorMes(1, 2026);
+        assertEquals(400.0, saldoJan, 0.001);
+    }
+
+    @Test
+    @DisplayName("Deve filtrar transações por mês e ano")
+    public void deveListarTransacoesPorMesEAno() throws SQLException, EntradaInvalidaException {
+        dao.salvar(new Transacao("Compra 1", 50.0, "DESPESA", LocalDate.of(2026, 3, 10)));
+        dao.salvar(new Transacao("Compra 2", 30.0, "DESPESA", LocalDate.of(2026, 3, 12)));
+        dao.salvar(new Transacao("Outro Mês", 100.0, "RECEITA", LocalDate.of(2026, 4, 1)));
+
+        List<Transacao> listaMarco = dao.listarPorMesEAno(3, 2026);
+        assertEquals(2, listaMarco.size());
     }
 }

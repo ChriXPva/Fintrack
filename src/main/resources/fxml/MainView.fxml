@@ -1,36 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controller.MainViewController" stylesheets="@../styles/style.css"
-            prefWidth="800" prefHeight="500">
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.MainViewController"
+            prefWidth="900.0" prefHeight="650.0">
+
     <top>
-        <HBox styleClass="header-panel" alignment="CENTER_LEFT" spacing="20">
-            <Label text="FinTrack - Gestão Financeira" styleClass="header-title"/>
-        </HBox>
-    </top>
-    <center>
-        <VBox spacing="10">
-            <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
-            <TableView fx:id="tabelaTransacoes" VBox.vgrow="ALWAYS">
-                <columns>
-                    <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
-                    <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="250"/>
-                    <TableColumn fx:id="colTipo" text="Tipo" prefWidth="120"/>
-                    <TableColumn fx:id="colValor" text="Valor" prefWidth="150"/>
-                    <TableColumn fx:id="colData" text="Data" prefWidth="150"/>
-                </columns>
-            </TableView>
+        <VBox spacing="10.0" style="-fx-background-color: #1E293B; -fx-padding: 20px;">
+            <BorderPane>
+                <left>
+                    <Label text="FinTrack" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #F8FAFC;" />
+                </left>
+                <right>
+                    <Button text="+ Nova Transação" onAction="#abrirFormularioCadastro"
+                            style="-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 16; -fx-background-radius: 6; -fx-cursor:hand;" />
+                </right>
+            </BorderPane>
+
+            <HBox alignment="CENTER_LEFT" spacing="15.0" style="-fx-background-color: #0F172A; -fx-padding: 15px; -fx-background-radius: 8;">
+                <Label text="Saldo Total Geral:" style="-fx-font-size: 16px; -fx-text-fill: #94A3B8;" />
+                <Label fx:id="lblSaldoTotal" text="R$ 0,00" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #F8FAFC;" />
+            </HBox>
         </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15" />
+            </padding>
+            <VBox spacing="10.0">
+                <Accordion fx:id="accordionMeses" />
+            </VBox>
+        </ScrollPane>
     </center>
-    <bottom>
-        <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 15;">
-            <Button text="Nova Transação" styleClass="button-primary" onAction="#abrirNovaTransacaoView"/>
-            <Button text="Remover Selecionada" styleClass="button-danger" onAction="#removerTransacao"/>
-            <Button text="Ver Relatório" styleClass="button-secondary" onAction="#abrirRelatorioView"/>
-        </HBox>
-    </bottom>
+
 </BorderPane>

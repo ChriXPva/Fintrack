@@ -10,12 +10,15 @@ public class Transacao {
     private double valor;
     private String tipo; // "RECEITA" ou "DESPESA"
     private LocalDate data;
+    
+    public Transacao() {
+    }
 
     public Transacao(String descricao, double valor, String tipo, LocalDate data) throws EntradaInvalidaException {
         setDescricao(descricao);
         setValor(valor);
         setTipo(tipo);
-        this.data = (data != null) ? data : LocalDate.now();
+        setData(data);
     }
 
     public Transacao(Integer id, String descricao, double valor, String tipo, LocalDate data) throws EntradaInvalidaException {
@@ -70,11 +73,5 @@ public class Transacao {
 
     public void setData(LocalDate data) {
         this.data = data;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("ID: %d | Tipo: %s | Descrição: %s | Valor: R$ %.2f | Data: %s",
-                id, tipo, descricao, valor, data.toString());
     }
 }

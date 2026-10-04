@@ -8,6 +8,7 @@ import model.Transacao;
 import service.FinTrackerService;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class NovaTransacaoController {
 
@@ -26,6 +27,8 @@ public class NovaTransacaoController {
     @FXML
     public void initialize() {
         comboTipo.getItems().addAll("RECEITA", "DESPESA");
+        comboTipo.getSelectionModel().selectFirst();
+        dpData.setValue(LocalDate.now());
     }
 
     @FXML
@@ -34,12 +37,13 @@ public class NovaTransacaoController {
             String desc = txtDescricao.getText();
             double valor = Double.parseDouble(txtValor.getText().replace(",", "."));
             String tipo = comboTipo.getValue();
+            LocalDate data = dpData.getValue();
 
-            Transacao t = new Transacao(desc, valor, tipo, dpData.getValue());
+            Transacao t = new Transacao(desc, valor, tipo, data);
             service.adicionarTransacao(t);
 
             if (mainController != null) {
-                mainController.atualizarTabela();
+                mainController.atualizarTela();
             }
             fechar();
         } catch (NumberFormatException e) {
